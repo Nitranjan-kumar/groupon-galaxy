@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
-  Search, 
   ShoppingCart, 
   User, 
   MapPin, 
@@ -10,7 +9,6 @@ import {
   X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { 
   Sheet, 
   SheetContent, 
@@ -18,19 +16,15 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
+import LocationSelector from '@/components/LocationSelector';
+import SearchPopover from '@/components/SearchPopover';
+import { useLocation } from '@/hooks/useLocation';
 
 const Header = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState('New York');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartItems } = useCart();
+  const { location } = useLocation();
   
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // We'll implement search functionality later
-    console.log('Searching for:', searchQuery);
-  };
-
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-2">
@@ -44,33 +38,13 @@ const Header = () => {
 
           {/* Location Selector */}
           <div className="hidden md:flex items-center text-groupon-gray mx-4">
-            <MapPin size={18} className="mr-1" />
-            <span className="text-sm">{location}</span>
+            <LocationSelector />
           </div>
 
           {/* Search Bar */}
-          <form 
-            onSubmit={handleSearchSubmit} 
-            className="hidden md:flex flex-1 max-w-xl"
-          >
-            <div className="relative w-full">
-              <Input
-                type="text"
-                placeholder="Search deals..."
-                className="pr-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <Button 
-                type="submit" 
-                variant="ghost" 
-                size="icon" 
-                className="absolute right-0 top-0"
-              >
-                <Search size={18} />
-              </Button>
-            </div>
-          </form>
+          <div className="hidden md:flex flex-1 max-w-xl">
+            <SearchPopover />
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-5 ml-4">
@@ -115,10 +89,10 @@ const Header = () => {
                     <User size={18} />
                     Sign In
                   </Link>
-                  <Link to="/" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
+                  <div className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
                     <MapPin size={18} />
-                    {location}
-                  </Link>
+                    <LocationSelector />
+                  </div>
                   <div className="pt-4 border-t">
                     <h3 className="font-bold mb-2">Categories</h3>
                     {categories.map(category => (
@@ -138,28 +112,9 @@ const Header = () => {
         </div>
 
         {/* Mobile Search Bar */}
-        <form 
-          onSubmit={handleSearchSubmit} 
-          className="mt-2 md:hidden"
-        >
-          <div className="relative w-full">
-            <Input
-              type="text"
-              placeholder="Search deals..."
-              className="pr-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button 
-              type="submit" 
-              variant="ghost" 
-              size="icon" 
-              className="absolute right-0 top-0"
-            >
-              <Search size={18} />
-            </Button>
-          </div>
-        </form>
+        <div className="mt-2 md:hidden">
+          <SearchPopover mobile />
+        </div>
       </div>
 
       {/* Categories Navigation */}

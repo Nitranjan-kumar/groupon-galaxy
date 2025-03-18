@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
@@ -33,6 +32,8 @@ import { Deal } from '@/types/deal';
 import { getDealById, getTrendingDeals } from '@/data/mockDeals';
 import { useCart } from '@/hooks/useCart';
 import DealCard from '@/components/DealCard';
+import BuyNowButton from '@/components/BuyNowButton';
+import { useLocation } from '@/hooks/useLocation';
 
 const DealDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,6 +44,7 @@ const DealDetails = () => {
   const [currentImage, setCurrentImage] = useState(0);
   const { toast } = useToast();
   const { addToCart } = useCart();
+  const { location } = useLocation();
 
   useEffect(() => {
     const fetchDeal = async () => {
@@ -53,14 +55,11 @@ const DealDetails = () => {
           if (fetchedDeal) {
             setDeal(fetchedDeal);
             
-            // Set gallery images or use main image if no gallery
             if (!fetchedDeal.gallery) {
               fetchedDeal.gallery = [fetchedDeal.imageUrl];
             }
             
-            // Fetch related deals
             const related = await getTrendingDeals();
-            // Filter out current deal from related
             setRelatedDeals(related.filter(d => d.id !== id));
           }
         }
@@ -121,24 +120,21 @@ const DealDetails = () => {
 
   return (
     <div className="min-h-screen bg-groupon-lightGray pb-10">
-      {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center text-sm text-groupon-gray">
             <Link to="/" className="hover:text-groupon-blue">Home</Link>
             <span className="mx-2">/</span>
-            <Link to={`/category/${deal.category}`} className="hover:text-groupon-blue capitalize">{deal.category}</Link>
+            <Link to={`/category/${deal?.category}`} className="hover:text-groupon-blue capitalize">{deal?.category}</Link>
             <span className="mx-2">/</span>
-            <span className="truncate max-w-[200px]">{deal.title}</span>
+            <span className="truncate max-w-[200px]">{deal?.title}</span>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 pt-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Deal Images & Details */}
           <div className="lg:col-span-2">
-            {/* Deal Images */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
               <div className="relative">
                 {deal.gallery && (
@@ -149,7 +145,6 @@ const DealDetails = () => {
                       className="w-full object-cover"
                     />
                     
-                    {/* Image Navigation */}
                     {deal.gallery.length > 1 && (
                       <>
                         <button 
@@ -169,7 +164,6 @@ const DealDetails = () => {
                   </div>
                 )}
                 
-                {/* Wishlist & Share */}
                 <div className="absolute top-4 right-4 flex space-x-2">
                   <Button 
                     variant="ghost" 
@@ -188,7 +182,6 @@ const DealDetails = () => {
                 </div>
               </div>
               
-              {/* Thumbnails */}
               {deal.gallery && deal.gallery.length > 1 && (
                 <div className="flex overflow-x-auto p-2 space-x-2">
                   {deal.gallery.map((img, idx) => (
@@ -206,7 +199,6 @@ const DealDetails = () => {
               )}
             </div>
             
-            {/* Tabs Content */}
             <Tabs defaultValue="details" className="bg-white rounded-lg shadow-sm overflow-hidden">
               <TabsList className="w-full border-b justify-start">
                 <TabsTrigger value="details" className="flex-1 sm:flex-none">Details</TabsTrigger>
@@ -296,7 +288,6 @@ const DealDetails = () => {
               </div>
             </Tabs>
             
-            {/* FAQ Accordion */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden mt-6 p-6">
               <h3 className="font-semibold mb-4">Frequently Asked Questions</h3>
               <Accordion type="single" collapsible className="w-full">
@@ -328,9 +319,7 @@ const DealDetails = () => {
             </div>
           </div>
           
-          {/* Buy Box & Related Deals */}
           <div>
-            {/* Buy Box */}
             <Card className="mb-6">
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
@@ -338,17 +327,17 @@ const DealDetails = () => {
                     <p className="text-groupon-gray text-sm">From</p>
                     <div className="flex items-center">
                       <span className="text-2xl font-bold text-groupon-blue">
-                        ${deal.currentPrice.toFixed(2)}
+                        ${deal?.currentPrice.toFixed(2)}
                       </span>
-                      {deal.originalPrice > deal.currentPrice && (
+                      {deal?.originalPrice > deal?.currentPrice && (
                         <span className="original-price text-sm ml-2">
-                          ${deal.originalPrice.toFixed(2)}
+                          ${deal?.originalPrice.toFixed(2)}
                         </span>
                       )}
                     </div>
                   </div>
                   
-                  {deal.originalPrice > deal.currentPrice && (
+                  {deal?.originalPrice > deal?.currentPrice && (
                     <div className="deal-badge">
                       {Math.round(((deal.originalPrice - deal.currentPrice) / deal.originalPrice) * 100)}% OFF
                     </div>
@@ -356,14 +345,14 @@ const DealDetails = () => {
                 </div>
                 
                 <div className="mb-6">
-                  {deal.expiresAt && (
+                  {deal?.expiresAt && (
                     <div className="flex items-center text-sm mb-2">
                       <Clock size={14} className="mr-2 text-groupon-gray" />
                       <span>Limited time remaining</span>
                     </div>
                   )}
                   
-                  {deal.sold && (
+                  {deal?.sold && (
                     <div className="flex items-center text-sm mb-2">
                       <Info size={14} className="mr-2 text-groupon-gray" />
                       <span><b>{deal.sold}+</b> already bought</span>
@@ -402,13 +391,29 @@ const DealDetails = () => {
                   </div>
                 </div>
                 
+                <div className="flex items-center text-sm mb-4">
+                  <MapPin size={14} className="mr-2 text-groupon-gray" />
+                  <span>Available in {location}</span>
+                </div>
+                
                 <div className="space-y-3">
                   <Button 
                     className="w-full bg-groupon-green hover:bg-groupon-green/90"
-                    onClick={handleAddToCart}
+                    onClick={() => {
+                      if (deal) {
+                        addToCart(deal, quantity);
+                      }
+                    }}
                   >
                     Add to Cart
                   </Button>
+                  
+                  <BuyNowButton 
+                    deal={deal!}
+                    quantity={quantity}
+                    className="w-full bg-groupon-blue hover:bg-groupon-blue/90"
+                  />
+                  
                   <Button 
                     variant="outline" 
                     className="w-full border-groupon-blue text-groupon-blue hover:bg-groupon-blue/10"
@@ -419,7 +424,6 @@ const DealDetails = () => {
               </CardContent>
             </Card>
             
-            {/* Related Deals */}
             <div className="bg-white rounded-lg shadow-sm overflow-hidden p-6">
               <h3 className="font-semibold mb-4">You Might Also Like</h3>
               <div className="space-y-4">
