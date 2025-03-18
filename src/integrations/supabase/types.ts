@@ -9,7 +9,157 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      deals: {
+        Row: {
+          category_id: string
+          created_at: string
+          description: string
+          discounted_price: number
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          is_popular: boolean | null
+          merchant_location: string | null
+          merchant_name: string
+          original_price: number
+          rating: number | null
+          reviews_count: number | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          description: string
+          discounted_price: number
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_popular?: boolean | null
+          merchant_location?: string | null
+          merchant_name: string
+          original_price: number
+          rating?: number | null
+          reviews_count?: number | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          description?: string
+          discounted_price?: number
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          is_popular?: boolean | null
+          merchant_location?: string | null
+          merchant_name?: string
+          original_price?: number
+          rating?: number | null
+          reviews_count?: number | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          city: string | null
+          created_at: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          city?: string | null
+          created_at?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      purchases: {
+        Row: {
+          deal_id: string
+          id: string
+          purchase_date: string
+          quantity: number
+          status: string
+          total_price: number
+          user_id: string
+        }
+        Insert: {
+          deal_id: string
+          id?: string
+          purchase_date?: string
+          quantity?: number
+          status?: string
+          total_price: number
+          user_id: string
+        }
+        Update: {
+          deal_id?: string
+          id?: string
+          purchase_date?: string
+          quantity?: number
+          status?: string
+          total_price?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchases_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saved_deals: {
+        Row: {
+          created_at: string
+          deal_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_deals_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

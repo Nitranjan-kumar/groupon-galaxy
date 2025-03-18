@@ -6,7 +6,8 @@ import {
   User, 
   MapPin, 
   Menu,
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -14,8 +15,17 @@ import {
   SheetContent, 
   SheetTrigger 
 } from '@/components/ui/sheet';
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
 import LocationSelector from '@/components/LocationSelector';
 import SearchPopover from '@/components/SearchPopover';
 import { useLocation } from '@/hooks/useLocation';
@@ -24,6 +34,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartItems } = useCart();
   const { location } = useLocation();
+  const { user, profile, signOut } = useAuth();
   
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -48,12 +59,40 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-5 ml-4">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/signin">
-                <User size={18} className="mr-1" />
-                Sign In
-              </Link>
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="flex items-center gap-2">
+                    <User size={18} />
+                    {profile?.first_name || 'Account'}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="w-full cursor-pointer">Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/purchases" className="w-full cursor-pointer">My Purchases</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/saved" className="w-full cursor-pointer">Saved Deals</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="text-red-500 flex items-center gap-2 cursor-pointer">
+                    <LogOut size={16} /> Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/signin">
+                  <User size={18} className="mr-1" />
+                  Sign In
+                </Link>
+              </Button>
+            )}
             <Button variant="ghost" size="sm" asChild>
               <Link to="/cart" className="relative">
                 <ShoppingCart size={18} className="mr-1" />
@@ -85,10 +124,37 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right" className="w-[250px] sm:w-[300px]">
                 <nav className="flex flex-col gap-6 mt-10">
-                  <Link to="/signin" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
-                    <User size={18} />
-                    Sign In
-                  </Link>
+                  {user ? (
+                    <div className="space-y-4">
+                      <div className="font-semibold">
+                        Hello, {profile?.first_name || 'User'}
+                      </div>
+                      <Link to="/profile" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
+                        <User size={18} />
+                        My Profile
+                      </Link>
+                      <Link to="/purchases" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
+                        My Purchases
+                      </Link>
+                      <Link to="/saved" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
+                        Saved Deals
+                      </Link>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={signOut}
+                        className="w-full flex items-center justify-center gap-2 text-red-500 mt-2"
+                      >
+                        <LogOut size={16} />
+                        Sign Out
+                      </Button>
+                    </div>
+                  ) : (
+                    <Link to="/signin" className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
+                      <User size={18} />
+                      Sign In
+                    </Link>
+                  )}
                   <div className="flex items-center gap-2 hover:text-groupon-blue transition-colors">
                     <MapPin size={18} />
                     <LocationSelector />
