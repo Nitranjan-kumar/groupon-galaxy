@@ -1,10 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
-
 const Footer = () => {
-  return (
-    <footer className="bg-white border-t border-gray-200 pt-10 pb-6">
+  return <footer className="bg-white border-t border-gray-200 pt-10 pb-6">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
@@ -66,9 +63,7 @@ const Footer = () => {
         
         <div className="border-t border-gray-200 mt-10 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-xs text-groupon-gray mb-4 md:mb-0">
-              © 2023 Groupon Clone. All rights reserved.
-            </p>
+            <p className="text-xs text-groupon-gray mb-4 md:mb-0">© 2025 Groupon Clone. All rights reserved.</p>
             <div className="flex space-x-6">
               <Link to="/privacy" className="text-xs text-groupon-gray hover:text-groupon-blue transition-colors">Privacy Policy</Link>
               <Link to="/terms" className="text-xs text-groupon-gray hover:text-groupon-blue transition-colors">Terms of Use</Link>
@@ -77,8 +72,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
