@@ -14,6 +14,7 @@ import CategoryPage from "./pages/CategoryPage";
 import DealDetails from "./pages/DealDetails";
 import CartPage from "./pages/CartPage";
 import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
 import SearchResults from "./pages/SearchResults";
 import NotFound from "./pages/NotFound";
 
@@ -38,6 +39,7 @@ const App = () => (
                     <Route path="/search" element={<SearchResults />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/signin" element={<SignIn />} />
+                    <Route path="/profile" element={<Profile />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>

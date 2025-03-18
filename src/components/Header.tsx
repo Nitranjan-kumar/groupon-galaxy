@@ -7,7 +7,10 @@ import {
   MapPin, 
   Menu,
   X,
-  LogOut
+  LogOut,
+  History,
+  Settings,
+  Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -71,13 +74,22 @@ const Header = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="w-full cursor-pointer">Profile</Link>
+                    <Link to="/profile" className="w-full cursor-pointer flex items-center gap-2">
+                      <Settings size={16} />
+                      Profile
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/purchases" className="w-full cursor-pointer">My Purchases</Link>
+                    <Link to="/profile" className="w-full cursor-pointer flex items-center gap-2">
+                      <History size={16} />
+                      My Purchases
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/saved" className="w-full cursor-pointer">Saved Deals</Link>
+                    <Link to="/saved" className="w-full cursor-pointer flex items-center gap-2">
+                      <Heart size={16} />
+                      Saved Deals
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut} className="text-red-500 flex items-center gap-2 cursor-pointer">
